@@ -1,5 +1,6 @@
 from cell import Cell
 from solution import Solution
+import sys
 
 
 def loadInstance(dir):
@@ -50,20 +51,28 @@ def firstStep(solution):
     return repeat
 
 
-def main():
-    instance = loadInstance('s01b.txt')
+def main(instance_file_name):
+    try:
+        if instance_file_name[-4:] != '.txt':
+            instance_file_name += '.txt'
+        instance = loadInstance(instance_file_name)
+    except:
+        print("Something wrong when opening the instance")
+        sys.exit()
     solution = Solution(instance)
     solution.print()
     solution.printFinal()
-    
+
     repeat = True
     while(repeat):
         repeat = firstStep(solution)
         if (repeat):
-            #solution.print()
+            # solution.print()
             solution.printFinal()
     solution.collisionCheck()
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) <= 1:
+        sys.exit()
+    main(sys.argv[1])
