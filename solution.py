@@ -60,9 +60,10 @@ class Solution:
             print()
         print()
 
-    # Need to test
-
-    def collisionCheck(self):
+    def countErrors(self):
+        error_qt_x = 0
+        error_qt_y = 0
+        error_qt_group = 0
         for i in range(9):
             number_count_x = [0 for x in range(9)]
             number_count_y = [0 for x in range(9)]
@@ -75,5 +76,24 @@ class Solution:
             for j in range(9):
                 if number_count_x[j] > 1:
                     print('Error at row %d' % i)
+                    error_qt_x += 1
                 if number_count_y[j] > 1:
                     print('Error at column %d' % i)
+                    error_qt_y += 1
+
+        for i in range(3):
+            for j in range(3):
+                number_count_group = [0 for x in range(9)]
+                for k in range(i*3, i*3+3):
+                    for l in range(j*3, j*3+3):
+                        for m in range(9):
+                            if self.matrix[k][l].final == True and self.matrix[k][l].mark[m] == True:
+                                print('Error at group (%d,%d)' % (i, j))
+                                number_count_group[m] += 1
+                for k in range(9):
+                    if number_count_group[k] > 1:
+                        error_qt_group += 1
+
+        error_qt_total = error_qt_x + error_qt_y + error_qt_group
+        print('(%d, %d, %d) = %d' %
+              (error_qt_x, error_qt_y, error_qt_group, error_qt_total))
