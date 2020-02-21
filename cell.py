@@ -1,11 +1,13 @@
 class Cell:
     def __init__(self, isFixed, value):
         self.fixed = isFixed
+        self.value = None
 
         if (self.fixed == True):
             self.final = True
             self.mark = [False for x in range(9)]
             self.mark[value-1] = True
+            self.value = value
         else:
             self.final = False
             self.mark = [True for x in range(9)]
@@ -16,6 +18,9 @@ class Cell:
         else:
             if (self.mark.count(True) == 1):
                 self.final = True
+                for i in range(9):
+                    if self.mark[i] == True:
+                        self.value = i+1
                 return True
             else:
                 return False
