@@ -1,6 +1,7 @@
 from cell import Cell
 from solution import Solution
 
+
 def loadInstance(dir):
     instance = []
 
@@ -13,29 +14,55 @@ def loadInstance(dir):
     return instance
 
 
-def main():
-    instance = loadInstance('s01a.txt')
-    solution = Solution(instance)
-    solution.print()
+def firstStep(solution):
+    repeat = False
 
     # Start removing conflicts with fixed numbers
     for i in range(9):
         for j in range(9):
-            if solution.matrix[i][j].fixed == True:
+            if solution.matrix[i][j].final == True:
                 # Get value
                 value = -1
                 for k in range(9):
                     if solution.matrix[i][j].mark[k] == True:
                         value = k
+                # Clean rows and columns
                 for k in range(9):
                     if k != i:
                         solution.matrix[k][j].mark[value] = False
                     if k != j:
                         solution.matrix[i][k].mark[value] = False
+                # Clean quadrants
+                # print(str(i) + ' '+str(j) + ' / ' +
+                      # str(int(i / 3)) + ' ' + str(int(j / 3)))
+                for k in range(int(i / 3)*3, int(i / 3)*3+3):
+                    for l in range(int(j / 3)*3, int(j / 3)*3+3):
+                        #print(str(k) + " " + str(l))
+                        if k != i and l != j:
+                            solution.matrix[k][l].mark[value] = False
 
+    for i in range(9):
+        for j in range(9):
+            if (solution.matrix[i][j].isNowFinal() == True):
+                print("(%d, %d) is now final" % (i, j))
+                repeat = True
+
+    return repeat
+
+
+def main():
+    instance = loadInstance('s01a.txt')
+    solution = Solution(instance)
     solution.print()
-
-
+    
+    repeat = True
+    while(repeat):
+        repeat = firstStep(solution)
+        if (repeat):
+            solution.print()
+    solution.collisionCheck()
+    solution.matrix[0][5].mark[0] = True
+    solution.collisionCheck()
 
 
 if __name__ == "__main__":

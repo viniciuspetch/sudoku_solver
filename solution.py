@@ -27,17 +27,38 @@ class Solution:
 
                 for k in range(9):
                     if self.matrix[i][j].fixed == True:
+                        sep = '-'
                         if self.matrix[i][j].mark[k] == True:
                             aux_string = aux_string + str(k+1)
                         else:
-                            aux_string = aux_string + "-"
+                            aux_string = aux_string + sep
                     else:
+                        sep = ' '
+                        if self.matrix[i][j].mark.count(True) == 1:
+                            sep = '_'
                         if self.matrix[i][j].mark[k] == True:
                             aux_string = aux_string + str(k+1)
                         else:
-                            aux_string = aux_string + " "
+                            aux_string = aux_string + sep
             aux_string = aux_string + "||"
 
             print(aux_string)
         print('='*95)
         print()
+
+    # Need to test
+    def collisionCheck(self):
+        for i in range(9):
+            number_count_x = [0 for x in range(9)]
+            number_count_y = [0 for x in range(9)]
+            for j in range(9):
+                for k in range(9):
+                    if self.matrix[i][j].final == True and self.matrix[i][j].mark[k] == True:
+                        number_count_x[k] += 1
+                    if self.matrix[j][i].final == True and self.matrix[j][i].mark[k] == True:
+                        number_count_y[k] += 1
+            for j in range(9):
+                if number_count_x[j] != 1:
+                    print('Error at row %d' % i)
+                if number_count_y[j] != 1:
+                    print('Error at column %d' % i)
