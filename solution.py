@@ -27,7 +27,7 @@ class Solution:
 
                 for k in range(9):
                     if self.matrix[i][j].fixed == True:
-                        sep = '-'
+                        sep = '_'
                         if self.matrix[i][j].mark[k] == True:
                             aux_string = aux_string + str(k+1)
                         else:
@@ -88,10 +88,10 @@ class Solution:
                     for l in range(j*3, j*3+3):
                         for m in range(9):
                             if self.matrix[k][l].final == True and self.matrix[k][l].mark[m] == True:
-                                print('Error at group (%d,%d)' % (i, j))
                                 number_count_group[m] += 1
                 for k in range(9):
                     if number_count_group[k] > 1:
+                        print('Error at group (%d,%d)' % (i, j))
                         error_qt_group += 1
 
         error_qt_total = error_qt_x + error_qt_y + error_qt_group
