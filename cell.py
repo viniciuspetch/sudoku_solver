@@ -1,7 +1,7 @@
 class Cell:
     def __init__(self, isFixed, value):
         self.fixed = isFixed
-        self.value = None
+        self.value = 0
 
         if (self.fixed == True):
             self.final = True
@@ -24,3 +24,26 @@ class Cell:
                 return True
             else:
                 return False
+
+    def checkFinal(self):
+        if self.final == True:
+            return False
+        
+        if (self.mark.count(True) == 1):
+            self.final = True
+            for i in range(9):
+                if self.mark[i] == True:
+                    self.value = i+1
+            return True
+        else:
+            return False
+
+    def setFinal(self, value):
+        if self.final == True:
+            return False
+        for i in range(9):
+            self.mark[i] = False
+        self.mark[value-1] = True
+        self.value = value
+        self.final = True
+        return True

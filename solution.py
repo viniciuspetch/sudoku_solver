@@ -5,6 +5,7 @@ class Solution:
     def __init__(self, instance):
         self.errorQt = 0
         self.matrix = []
+        self.id = -1
 
         for i in range(9):
             aux_list = []
@@ -46,15 +47,11 @@ class Solution:
         print('='*95)
         print()
 
-    def printFinal(self):
+    def printShort(self):
         for i in range(9):
             for j in range(9):
-                value = -1
                 if self.matrix[i][j].final:
-                    for k in range(9):
-                        if self.matrix[i][j].mark[k]:
-                            value = k+1
-                    print(value, end=" ")
+                    print(self.matrix[i][j].value, end=" ")
                 else:
                     print('_', end=" ")
             print()
@@ -75,10 +72,10 @@ class Solution:
                         number_count_y[k] += 1
             for j in range(9):
                 if number_count_x[j] > 1:
-                    print('Error at row %d' % i)
+                    # print('Error at row %d' % i)
                     error_qt_x += 1
                 if number_count_y[j] > 1:
-                    print('Error at column %d' % i)
+                    # print('Error at column %d' % i)
                     error_qt_y += 1
 
         for i in range(3):
@@ -91,9 +88,38 @@ class Solution:
                                 number_count_group[m] += 1
                 for k in range(9):
                     if number_count_group[k] > 1:
-                        print('Error at group (%d,%d)' % (i, j))
+                        # print('Error at group (%d,%d)' % (i, j))
                         error_qt_group += 1
 
         error_qt_total = error_qt_x + error_qt_y + error_qt_group
-        print('(%d, %d, %d) = %d' %
-              (error_qt_x, error_qt_y, error_qt_group, error_qt_total))
+        # print('(%d, %d, %d) = %d' %
+        #   (error_qt_x, error_qt_y, error_qt_group, error_qt_total))
+        return error_qt_total
+
+    def checkFinal(self):
+        new_final = False
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].checkFinal():
+                    new_final = True
+        return new_final
+
+    def countGaps(self):
+        gap_qt = 0
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].mark.count(True) == 0:
+                    gap_qt += 1
+        return gap_qt
+
+    def countNonFinal(self):
+        gap_qt = 0
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].final == 0:
+                    gap_qt += 1
+        return gap_qt
+
+    def stats(self):
+        print('Errors: %d; Gaps: %d; Non-finals: %d' %
+              (self.countErrors(), self.countGaps(), self.countNonFinal()))
