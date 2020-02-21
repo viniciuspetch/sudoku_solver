@@ -44,24 +44,24 @@ def firstStep(solution):
     for i in range(9):
         for j in range(9):
             if (solution.matrix[i][j].isNowFinal() == True):
-                print("(%d, %d) is now final" % (i, j))
+                #print("(%d, %d) is now final" % (i, j))
                 repeat = True
 
     return repeat
 
 
 def main():
-    instance = loadInstance('s01a.txt')
+    instance = loadInstance('s01b.txt')
     solution = Solution(instance)
     solution.print()
+    solution.printFinal()
     
     repeat = True
     while(repeat):
         repeat = firstStep(solution)
         if (repeat):
-            solution.print()
-    solution.collisionCheck()
-    solution.matrix[0][5].mark[0] = True
+            #solution.print()
+            solution.printFinal()
     solution.collisionCheck()
 
 

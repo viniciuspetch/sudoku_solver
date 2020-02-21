@@ -46,7 +46,22 @@ class Solution:
         print('='*95)
         print()
 
+    def printFinal(self):
+        for i in range(9):
+            for j in range(9):
+                value = -1
+                if self.matrix[i][j].final:
+                    for k in range(9):
+                        if self.matrix[i][j].mark[k]:
+                            value = k+1
+                    print(value, end=" ")
+                else:
+                    print('_', end=" ")
+            print()
+        print()
+
     # Need to test
+
     def collisionCheck(self):
         for i in range(9):
             number_count_x = [0 for x in range(9)]
