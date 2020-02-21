@@ -73,7 +73,7 @@ class Solution:
                     if self.matrix[j][i].final == True and self.matrix[j][i].mark[k] == True:
                         number_count_y[k] += 1
             for j in range(9):
-                if number_count_x[j] != 1:
+                if number_count_x[j] > 1:
                     print('Error at row %d' % i)
-                if number_count_y[j] != 1:
+                if number_count_y[j] > 1:
                     print('Error at column %d' % i)
