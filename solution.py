@@ -16,7 +16,7 @@ class Solution:
                     aux_list.append(Cell(True, int(instance[i][j])))
             self.matrix.append(aux_list.copy())
 
-    def print(self):
+    def printTable(self):
         for i in range(9):
             if (i % 3 == 0):
                 print('='*95)
@@ -47,7 +47,7 @@ class Solution:
         print('='*95)
         print()
 
-    def printShort(self):
+    def printTableShort(self):
         for i in range(9):
             for j in range(9):
                 if self.matrix[i][j].final:
@@ -120,6 +120,6 @@ class Solution:
                     gap_qt += 1
         return gap_qt
 
-    def stats(self):
+    def printStats(self):
         print('Errors: %d; Gaps: %d; Non-finals: %d' %
               (self.countErrors(), self.countGaps(), self.countNonFinal()))
