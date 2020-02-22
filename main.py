@@ -42,19 +42,21 @@ def main(instance_file_name, print_flag, algorithm):
     # solution.printTableShort()
 
     if algorithm == 'backtracking':
-        if print_flag >= 1:
+        if print_flag >= 2:
             print("Main: Using backtracking algorithm")
-        best_solution = backtracking(solution, False)
+        best_solution = backtracking(solution, print_flag)
     elif algorithm == 'estochastic':
-        if print_flag >= 1:
+        if print_flag >= 2:
             print("Main: Using estochastic backtracking algorithm")
-        best_solution = estochasticBacktracking(solution, False)
+        best_solution = estochasticBacktracking(solution, print_flag)
     else:
-        if print_flag >= 1:
+        if print_flag >= 2:
             print("Main: Using no algorithm")
         best_solution = solution
-    best_solution.printStats()
-    best_solution.printTableShort()
+    if print_flag >= 1:
+        best_solution.printStats()
+    if print_flag >= 0:
+        best_solution.printTableShort()
     print(time.time()-start_time)
 
 
@@ -67,6 +69,8 @@ if __name__ == "__main__":
             if sys.argv[i] == '-i' or sys.argv[i] == '-inst' or sys.argv[i] == '-instance':
                 instance_filename = sys.argv[i+1]
                 i += 1
+            elif sys.argv[i] == '-t' or sys.argv[i] == '-time':
+                print_flag = -1
             elif sys.argv[i] == '-p0' or sys.argv[i] == '-print0':
                 print_flag = 0
             elif sys.argv[i] == '-p1' or sys.argv[i] == '-print1':
@@ -76,7 +80,4 @@ if __name__ == "__main__":
             elif sys.argv[i] == '-estochastic' or sys.argv[i] == '-ebt':
                 algorithm = 'estochastic'
 
-    print(instance_filename)
-    print(print_flag)
-    print(algorithm)
     main(instance_filename, print_flag, algorithm)
