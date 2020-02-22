@@ -45,7 +45,6 @@ class Solution:
 
             print(aux_string)
         print('='*95)
-        print()
 
     def printTableShort(self):
         for i in range(9):
@@ -55,7 +54,6 @@ class Solution:
                 else:
                     print('_', end=" ")
             print()
-        print()
 
     def countErrors(self):
         error_qt_x = 0
@@ -123,3 +121,14 @@ class Solution:
     def printStats(self):
         print('Errors: %d; Gaps: %d; Non-finals: %d' %
               (self.countErrors(), self.countGaps(), self.countNonFinal()))
+
+    def checkInc(self):
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].final:
+                    if self.matrix[i][j].mark.count(True) != 1:
+                        return True
+                elif self.matrix[i][j].mark.count(True) == 1:
+                    return True
+        return False
+

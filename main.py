@@ -28,12 +28,16 @@ def main(instance_file_name):
     solution = Solution(instance)
 
     repeat = True
+    print("Main: Instance")
     solution.printTableShort()
     while(repeat):
         repeat = heuristic1(solution)
-        solution.printStats()
-    solution.printStats()
+        if repeat:
+            solution.printStats()
+    print("Main: First heuristic execution result")
     solution.printTableShort()
+
+    backtracking(solution)
 
 
 if __name__ == "__main__":

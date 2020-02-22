@@ -37,46 +37,41 @@ def heuristic1(solution):
 
 
 def backtracking(solution):
-    id_count = 0
-    solution.id = id_count
-    id_count += 1
+    print("Backtracking: Start")
     solution_stack = [solution]
 
     while(len(solution_stack) > 0):
         curr_solution = solution_stack.pop()
+        # Check inconsistencies
+        if curr_solution.checkInc():
+            print("Backtracking: Inconsistency found")
 
+        # Get the first non-final cell
+        # Stop
         nf_x, nf_y = getFirstNonFinal(curr_solution)
-        print(nf_x, nf_y)
-        print(curr_solution.matrix[nf_x][nf_y].mark)
         if nf_x == -1 and nf_y == -1:
-            return curr_solution
-        possible = True
+            print("Backtracking: Found a complete solution")
+            curr_solution.printStats()
+            curr_solution.printTableShort()
+            break
+
+            # Print
+            print("Backtracking: Solution from stack")
+            curr_solution.printStats()
+            curr_solution.printTableShort()
 
         for i in range(9):
             if curr_solution.matrix[nf_x][nf_y].mark[i]:
                 # Create copy to modify
                 new_solution = copy.deepcopy(curr_solution)
-                new_solution.id = id_count
-                id_count += 1
-
-                # Print
-                print('Errors: %d; Gaps: %d; Non-finals: %d' %
-                      (new_solution.countErrors(), new_solution.countGaps(), new_solution.countNonFinal()))
-                new_solution.print2()
-                new_solution.printShort()
 
                 # Set the first non-final cell as final for each option value
-                print("Set (%d,%d) to %d" % (nf_x, nf_y, i+1))
-                for j in range(9):
-                    new_solution.matrix[nf_x][nf_y].mark[j] = False
-                new_solution.matrix[nf_x][nf_y].mark[i] = True
-                new_solution.matrix[nf_x][nf_y].isNowFinal()
+                new_solution.matrix[nf_x][nf_y].setFinal(i+1)
 
                 # Print
-                print('Errors: %d; Gaps: %d; Non-finals: %d' %
-                      (new_solution.countErrors(), new_solution.countGaps(), new_solution.countNonFinal()))
-                new_solution.print2()
-                new_solution.printShort()
+                print("Backtracking: Set cell value at (%d,%d) to %d" % (nf_x, nf_y, i+1))
+                new_solution.printStats()
+                new_solution.printTableShort()
 
                 # Apply heuristic
                 repeat = True
@@ -84,19 +79,14 @@ def backtracking(solution):
                     repeat = heuristic1(new_solution)
 
                 # Print
-                print('Errors: %d; Gaps: %d; Non-finals: %d' %
-                      (new_solution.countErrors(), new_solution.countGaps(), new_solution.countNonFinal()))
-                new_solution.print2()
-                new_solution.printShort()
-                print("\n\n")
+                print("Backtracking: Heuristic applied")
+                new_solution.printStats()
+                new_solution.printTableShort()
 
                 # Eliminate dead ends
                 possible = True
-                for i in range(9):
-                    for j in range(9):
-                        if curr_solution.matrix[i][j].final != True and curr_solution.matrix[i][j].mark.count(True) == 0 and possible == True:
-                            print('ID %d is a dead end' % curr_solution.id)
-                            possible = False
+                if new_solution.countErrors() > 0 or new_solution.countGaps() > 0:
+                    possible = False
 
                 if curr_solution.countErrors() > 0:
                     possible = False
