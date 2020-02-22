@@ -48,14 +48,14 @@ def heuristic1(solution):
 
 def estochasticBacktracking(solution, printFlag=True):
     if printFlag:
-        print("Backtracking: Start")
+        print("Estochastic backtracking: Start")
     solution_stack = [solution]
 
     while(len(solution_stack) > 0):
         curr_solution = solution_stack.pop()
         # Check inconsistencies
         if curr_solution.checkInc():
-            print("[ERROR] Backtracking: Inconsistency found")
+            print("[ERROR] Estochastic backtracking: Inconsistency found")
 
         # Get the first non-final cell
         # Stop
@@ -66,14 +66,14 @@ def estochasticBacktracking(solution, printFlag=True):
             nf_x, nf_y = nf_list[random_cell]            
         else:
             if printFlag:
-                print("Backtracking: Found a complete solution")
+                print("Estochastic backtracking: Found a complete solution")
                 curr_solution.printStats()
                 curr_solution.printTableShort()
             return curr_solution
 
         # Print
         if printFlag:
-            print("Backtracking: Solution from stack")
+            print("Estochastic backtracking: Solution from stack")
             curr_solution.printStats()
             curr_solution.printTableShort()
 
@@ -87,7 +87,7 @@ def estochasticBacktracking(solution, printFlag=True):
 
                 # Print
                 if printFlag:
-                    print("Backtracking: Set cell value at (%d,%d) to %d" %
+                    print("Estochastic backtracking: Set cell value at (%d,%d) to %d" %
                           (nf_x, nf_y, i+1))
                     new_solution.printStats()
                     new_solution.printTableShort()
@@ -99,7 +99,7 @@ def estochasticBacktracking(solution, printFlag=True):
 
                 # Print
                 if printFlag:
-                    print("Backtracking: Heuristic applied")
+                    print("Estochastic backtracking: Heuristic applied")
                     new_solution.printStats()
                     new_solution.printTableShort()
 
@@ -107,11 +107,11 @@ def estochasticBacktracking(solution, printFlag=True):
                 possible = True
                 if new_solution.countErrors() > 0:
                     if printFlag:
-                        print("Backtracking: Dead end - solution has errors")
+                        print("Estochastic backtracking: Dead end - solution has errors")
                     possible = False
                 if new_solution.countGaps() > 0:
                     if printFlag:
-                        print("Backtracking: Dead end - solution has gaps")
+                        print("Estochastic backtracking: Dead end - solution has gaps")
                     possible = False
 
                 if possible:
