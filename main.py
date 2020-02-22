@@ -1,6 +1,7 @@
 from cell import Cell
 from solution import Solution
 from algorithms import heuristic1, backtracking
+import time
 import sys
 import copy
 
@@ -26,6 +27,7 @@ def main(instance_file_name, printFlag):
         print("Something wrong when opening the instance")
         sys.exit()
     solution = Solution(instance)
+    start_time = time.time()
 
     repeat = True
     if printFlag:
@@ -42,6 +44,7 @@ def main(instance_file_name, printFlag):
     best_solution = backtracking(solution, printFlag)
     best_solution.printStats()
     best_solution.printTableShort()
+    print(time.time()-start_time)
 
 
 if __name__ == "__main__":

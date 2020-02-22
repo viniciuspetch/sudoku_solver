@@ -91,10 +91,13 @@ def backtracking(solution, printFlag=True):
 
                 # Eliminate dead ends
                 possible = True
-                if new_solution.countErrors() > 0 or new_solution.countGaps() > 0:
+                if new_solution.countErrors() > 0:
+                    if printFlag:
+                        print("Backtracking: Dead end - solution has errors")
                     possible = False
-
-                if curr_solution.countErrors() > 0:
+                if new_solution.countGaps() > 0:
+                    if printFlag:
+                        print("Backtracking: Dead end - solution has gaps")
                     possible = False
 
                 if possible:
