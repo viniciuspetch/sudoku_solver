@@ -17,7 +17,7 @@ def loadInstance(dir):
     return instance
 
 
-def main(instance_file_name):
+def main(instance_file_name, printFlag):
     try:
         if instance_file_name[-4:] != '.txt':
             instance_file_name += '.txt'
@@ -28,19 +28,27 @@ def main(instance_file_name):
     solution = Solution(instance)
 
     repeat = True
-    print("Main: Instance")
-    solution.printTableShort()
+    if printFlag:
+        print("Main: Instance")
+        solution.printTableShort()
     while(repeat):
         repeat = heuristic1(solution)
-        if repeat:
+        if repeat and printFlag:
             solution.printStats()
-    print("Main: First heuristic execution result")
-    solution.printTableShort()
+    if printFlag:
+        print("Main: First heuristic execution result")
+    # solution.printTableShort()
 
-    backtracking(solution)
+    best_solution = backtracking(solution, printFlag)
+    best_solution.printStats()
+    best_solution.printTableShort()
 
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 1:
+    if len(sys.argv) < 2:
         sys.exit()
-    main(sys.argv[1])
+    arg2 = False
+    if len(sys.argv) == 3:
+        if sys.argv[2].lower() == 'true':
+            arg2 = True
+    main(sys.argv[1], arg2)

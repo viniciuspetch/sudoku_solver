@@ -36,29 +36,32 @@ def heuristic1(solution):
     return solution.checkFinal()
 
 
-def backtracking(solution):
-    print("Backtracking: Start")
+def backtracking(solution, printFlag=True):
+    if printFlag:
+        print("Backtracking: Start")
     solution_stack = [solution]
 
     while(len(solution_stack) > 0):
         curr_solution = solution_stack.pop()
         # Check inconsistencies
         if curr_solution.checkInc():
-            print("Backtracking: Inconsistency found")
+            print("[ERROR] Backtracking: Inconsistency found")
 
         # Get the first non-final cell
         # Stop
         nf_x, nf_y = getFirstNonFinal(curr_solution)
         if nf_x == -1 and nf_y == -1:
-            print("Backtracking: Found a complete solution")
-            curr_solution.printStats()
-            curr_solution.printTableShort()
-            break
+            if printFlag:
+                print("Backtracking: Found a complete solution")
+                curr_solution.printStats()
+                curr_solution.printTableShort()
+            return curr_solution
 
             # Print
-            print("Backtracking: Solution from stack")
-            curr_solution.printStats()
-            curr_solution.printTableShort()
+            if printFlag:
+                print("Backtracking: Solution from stack")
+                curr_solution.printStats()
+                curr_solution.printTableShort()
 
         for i in range(9):
             if curr_solution.matrix[nf_x][nf_y].mark[i]:
@@ -69,9 +72,11 @@ def backtracking(solution):
                 new_solution.matrix[nf_x][nf_y].setFinal(i+1)
 
                 # Print
-                print("Backtracking: Set cell value at (%d,%d) to %d" % (nf_x, nf_y, i+1))
-                new_solution.printStats()
-                new_solution.printTableShort()
+                if printFlag:
+                    print("Backtracking: Set cell value at (%d,%d) to %d" %
+                          (nf_x, nf_y, i+1))
+                    new_solution.printStats()
+                    new_solution.printTableShort()
 
                 # Apply heuristic
                 repeat = True
@@ -79,9 +84,10 @@ def backtracking(solution):
                     repeat = heuristic1(new_solution)
 
                 # Print
-                print("Backtracking: Heuristic applied")
-                new_solution.printStats()
-                new_solution.printTableShort()
+                if printFlag:
+                    print("Backtracking: Heuristic applied")
+                    new_solution.printStats()
+                    new_solution.printTableShort()
 
                 # Eliminate dead ends
                 possible = True
