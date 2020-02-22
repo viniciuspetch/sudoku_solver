@@ -18,41 +18,65 @@ def loadInstance(dir):
     return instance
 
 
-def main(instance_file_name, printFlag):
+def main(instance_file_name, print_flag, algorithm):
     try:
         if instance_file_name[-4:] != '.txt':
             instance_file_name += '.txt'
         instance = loadInstance(instance_file_name)
     except:
-        print("Something wrong when opening the instance")
+        print("[ERROR] Main: Something wrong when opening the instance")
         sys.exit()
     solution = Solution(instance)
     start_time = time.time()
 
     repeat = True
-    if printFlag:
+    if print_flag >= 2:
         print("Main: Instance")
         solution.printTableShort()
     while(repeat):
         repeat = heuristic1(solution)
-        if repeat and printFlag:
+        if repeat and print_flag:
             solution.printStats()
-    if printFlag:
+    if print_flag >= 2:
         print("Main: First heuristic execution result")
     # solution.printTableShort()
 
-    # best_solution = backtracking(solution, printFlag)
-    best_solution = estochasticBacktracking(solution, printFlag)
+    if algorithm == 'backtracking':
+        if print_flag >= 1:
+            print("Main: Using backtracking algorithm")
+        best_solution = backtracking(solution, False)
+    elif algorithm == 'estochastic':
+        if print_flag >= 1:
+            print("Main: Using estochastic backtracking algorithm")
+        best_solution = estochasticBacktracking(solution, False)
+    else:
+        if print_flag >= 1:
+            print("Main: Using no algorithm")
+        best_solution = solution
     best_solution.printStats()
     best_solution.printTableShort()
     print(time.time()-start_time)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        sys.exit()
-    arg2 = False
-    if len(sys.argv) == 3:
-        if sys.argv[2].lower() == 'true':
-            arg2 = True
-    main(sys.argv[1], arg2)
+    instance_filename = ''
+    print_flag = 2
+    algorithm = 'none'
+    for i in range(1, len(sys.argv)):
+        if sys.argv[i][0] == '-':
+            if sys.argv[i] == '-i' or sys.argv[i] == '-inst' or sys.argv[i] == '-instance':
+                instance_filename = sys.argv[i+1]
+                i += 1
+            elif sys.argv[i] == '-p0' or sys.argv[i] == '-print0':
+                print_flag = 0
+            elif sys.argv[i] == '-p1' or sys.argv[i] == '-print1':
+                print_flag = 1
+            elif sys.argv[i] == '-backtracking' or sys.argv[i] == '-bt':
+                algorithm = 'backtracking'
+            elif sys.argv[i] == '-estochastic' or sys.argv[i] == '-ebt':
+                algorithm = 'estochastic'
+
+    print(instance_filename)
+    print(print_flag)
+    print(algorithm)
+    main(instance_filename, print_flag, algorithm)
