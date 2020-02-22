@@ -1,6 +1,6 @@
 from cell import Cell
 from solution import Solution
-from algorithms import heuristic1, backtracking
+from algorithms import backtracking, estochasticBacktracking, heuristic1
 import time
 import sys
 import copy
@@ -41,7 +41,8 @@ def main(instance_file_name, printFlag):
         print("Main: First heuristic execution result")
     # solution.printTableShort()
 
-    best_solution = backtracking(solution, printFlag)
+    # best_solution = backtracking(solution, printFlag)
+    best_solution = estochasticBacktracking(solution, printFlag)
     best_solution.printStats()
     best_solution.printTableShort()
     print(time.time()-start_time)

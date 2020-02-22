@@ -2,6 +2,7 @@ from cell import Cell
 from solution import Solution
 import sys
 import copy
+from random import randrange
 
 
 def getFirstNonFinal(solution):
@@ -10,6 +11,15 @@ def getFirstNonFinal(solution):
             if solution.matrix[i][j].final != True:
                 return (i, j)
     return (-1, -1)
+
+
+def getAllNonFinal(solution):
+    nf_list = []
+    for i in range(9):
+        for j in range(9):
+            if solution.matrix[i][j].final != True:
+                nf_list.append((i, j))
+    return nf_list
 
 
 def heuristic1(solution):
@@ -36,6 +46,78 @@ def heuristic1(solution):
     return solution.checkFinal()
 
 
+def estochasticBacktracking(solution, printFlag=True):
+    if printFlag:
+        print("Backtracking: Start")
+    solution_stack = [solution]
+
+    while(len(solution_stack) > 0):
+        curr_solution = solution_stack.pop()
+        # Check inconsistencies
+        if curr_solution.checkInc():
+            print("[ERROR] Backtracking: Inconsistency found")
+
+        # Get the first non-final cell
+        # Stop
+        nf_list = getAllNonFinal(curr_solution)
+
+        if len(nf_list) != 0:
+            random_cell = randrange(len(nf_list))
+            nf_x, nf_y = nf_list[random_cell]            
+        else:
+            if printFlag:
+                print("Backtracking: Found a complete solution")
+                curr_solution.printStats()
+                curr_solution.printTableShort()
+            return curr_solution
+
+        # Print
+        if printFlag:
+            print("Backtracking: Solution from stack")
+            curr_solution.printStats()
+            curr_solution.printTableShort()
+
+        for i in range(9):
+            if curr_solution.matrix[nf_x][nf_y].mark[i]:
+                # Create copy to modify
+                new_solution = copy.deepcopy(curr_solution)
+
+                # Set the first non-final cell as final for each option value
+                new_solution.matrix[nf_x][nf_y].setFinal(i+1)
+
+                # Print
+                if printFlag:
+                    print("Backtracking: Set cell value at (%d,%d) to %d" %
+                          (nf_x, nf_y, i+1))
+                    new_solution.printStats()
+                    new_solution.printTableShort()
+
+                # Apply heuristic
+                repeat = True
+                while(repeat):
+                    repeat = heuristic1(new_solution)
+
+                # Print
+                if printFlag:
+                    print("Backtracking: Heuristic applied")
+                    new_solution.printStats()
+                    new_solution.printTableShort()
+
+                # Eliminate dead ends
+                possible = True
+                if new_solution.countErrors() > 0:
+                    if printFlag:
+                        print("Backtracking: Dead end - solution has errors")
+                    possible = False
+                if new_solution.countGaps() > 0:
+                    if printFlag:
+                        print("Backtracking: Dead end - solution has gaps")
+                    possible = False
+
+                if possible:
+                    solution_stack.append(copy.copy(new_solution))
+
+
 def backtracking(solution, printFlag=True):
     if printFlag:
         print("Backtracking: Start")
@@ -57,11 +139,11 @@ def backtracking(solution, printFlag=True):
                 curr_solution.printTableShort()
             return curr_solution
 
-            # Print
-            if printFlag:
-                print("Backtracking: Solution from stack")
-                curr_solution.printStats()
-                curr_solution.printTableShort()
+        # Print
+        if printFlag:
+            print("Backtracking: Solution from stack")
+            curr_solution.printStats()
+            curr_solution.printTableShort()
 
         for i in range(9):
             if curr_solution.matrix[nf_x][nf_y].mark[i]:
