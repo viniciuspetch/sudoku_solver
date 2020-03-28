@@ -24,7 +24,6 @@ def loadInstance(filename):
 
 
 def main(initialSolution, print_flag=-1, algorithm='backtracking'):
-    print("Start")
     solution = Solution(initialSolution)
     start_time = time.time()
 
@@ -34,7 +33,7 @@ def main(initialSolution, print_flag=-1, algorithm='backtracking'):
         solution.printTableShort()
     while(repeat):
         repeat = heuristic1(solution)
-        if repeat and print_flag:
+        if repeat and print_flag >= 1:
             solution.printStats()
     if print_flag >= 2:
         print("Main: First heuristic execution result")
