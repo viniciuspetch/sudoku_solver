@@ -16,6 +16,14 @@ class Solution:
                     aux_list.append(Cell(True, int(instance[i][j])))
             self.matrix.append(aux_list.copy())
 
+    def toMatrix(self):
+        m = []
+        for i in range(9):
+            m.append([])
+            for j in range(9):
+                m[i].append(self.matrix[i][j].value)
+        return m
+
     def printTable(self):
         for i in range(9):
             if (i % 3 == 0):

@@ -6,9 +6,14 @@ import sys
 import copy
 
 
-def loadInstance(dir):
+def loadInstance(filename):
+    try:
+        if filename[-4:] != '.txt':
+            filename += '.txt'
+    except:
+        print("[ERROR] Main: Something wrong when opening the instance")
+        sys.exit()
     instance = []
-
     with open(dir, 'r') as file:
         for i in range(9):
             file_line = file.readline()
@@ -18,15 +23,9 @@ def loadInstance(dir):
     return instance
 
 
-def main(instance_file_name, print_flag, algorithm):
-    try:
-        if instance_file_name[-4:] != '.txt':
-            instance_file_name += '.txt'
-        instance = loadInstance(instance_file_name)
-    except:
-        print("[ERROR] Main: Something wrong when opening the instance")
-        sys.exit()
-    solution = Solution(instance)
+def main(initialSolution, print_flag=-1, algorithm='backtracking'):
+    print("Start")
+    solution = Solution(initialSolution)
     start_time = time.time()
 
     repeat = True
@@ -57,7 +56,8 @@ def main(instance_file_name, print_flag, algorithm):
         best_solution.printStats()
     if print_flag >= 0:
         best_solution.printTableShort()
-    print(time.time()-start_time)
+        print(time.time()-start_time)
+    return best_solution
 
 
 if __name__ == "__main__":
@@ -79,5 +79,5 @@ if __name__ == "__main__":
                 algorithm = 'backtracking'
             elif sys.argv[i] == '-estochastic' or sys.argv[i] == '-ebt':
                 algorithm = 'estochastic'
-
-    main(instance_filename, print_flag, algorithm)
+    initialSolution = loadInstance(instance_filename)
+    main(initialSolution, print_flag, algorithm)
