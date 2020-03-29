@@ -1,15 +1,13 @@
 class Cell:
-    def __init__(self, isFixed, value):
-        self.fixed = isFixed
+    def __init__(self, isFinal, value):
+        self.final = isFinal
         self.value = 0
 
-        if (self.fixed == True):
-            self.final = True
+        if (self.final == True):
             self.mark = [False for x in range(9)]
             self.mark[value-1] = True
             self.value = value
         else:
-            self.final = False
             self.mark = [True for x in range(9)]
 
     def isNowFinal(self):

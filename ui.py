@@ -3,33 +3,41 @@ import tkinter.ttk as ttk
 from tkinter import filedialog
 import main
 
-def transformInstance(instOrig):
-    #instString = "".join("".join("".join(c for c in instOrig if c.isdigit()).split()).split("\n"))
-    instString = "".join("".join(c for c in instOrig if c.isdigit()).split("\n"))
-    instMatrix = []
-    for i in range(9):
-        instMatrix.append([])
-        for j in range(9):
-            instMatrix[i].append(int(instString[j+i*9]))
-    return instMatrix
 
-def solve():    
-    solution = []
+def gridToMatrix():
+    solMatrix = []
     for i in range(9):
-        solution.append([])
+        solMatrix.append([])
         for j in range(9):
             if scell[i][j].get() == '':
-                solution[i].append('0')
+                solMatrix[i].append(0)
             else:
+                solMatrix[i].append(int(scell[i][j].get()))
+    return solMatrix
+
+
+def matrixToGrid(solMatrix):
+    for i in range(9):
+        for j in range(9):
+            scell[j][i].delete(0, tk.END)
+            if int(solMatrix[i][j]) != 0:
+                scell[j][i].insert(0, solMatrix[i][j])
+
+
+def solve():
+    for i in range(9):
+        for j in range(9):
+            if scell[i][j].get() != '':
                 scell[i][j]['background'] = 'light grey'
-                solution[i].append(scell[i][j].get())
     root.update()
-    result = main.main(solution, print_flag=2, algorithm=algoCombobox.get()).toMatrix()
+    result = main.main(gridToMatrix(), print_flag=2,
+                       algorithm=algoCombobox.get()).toMatrix()
     for i in range(9):
         for j in range(9):
             scell[i][j].delete(0, tk.END)
             scell[i][j].insert(0, result[i][j])
     statusLabelVar.set("Solved!")
+
 
 def solveBtnAction():
     statusLabelVar.set("Solving...")
@@ -40,16 +48,13 @@ def solveBtnAction():
 def inputFileBtnAction():
     filename = filedialog.askopenfilename(initialdir="./", title="Select file")
     with open(filename, "r") as inputFile:
-        instMatrix = transformInstance(inputFile.read())
-        for i in range(9):
-            for j in range(9):
-                scell[j][i].delete(0, tk.END)
-                if instMatrix[i][j] != 0:
-                    scell[j][i].insert(0, instMatrix[i][j])
+        matrixToGrid(main.stringToMatrix(main.filterInstance(inputFile.read())))
         statusLabelVar.set("File opened")
 
+
 def outputFileBtnAction():
-    filename = filedialog.asksaveasfilename(initialdir="./", title="Select file")
+    filename = filedialog.asksaveasfilename(
+        initialdir="./", title="Select file")
     with open(filename, "w") as outputFile:
         output = ''
         for i in range(9):
@@ -58,6 +63,7 @@ def outputFileBtnAction():
             output += '\n'
         outputFile.write(output)
         statusLabelVar.set("File saved")
+
 
 root = tk.Tk()
 mainframe = tk.Frame(root)
@@ -79,7 +85,7 @@ for i in range(9):
     scell.append([])
     for j in range(9):
         scell[i].append(tk.Entry(group[int(i/3)][int(j/3)], width='4'))
-        scell[i][j].grid(column=i%3, row=j%3)
+        scell[i][j].grid(column=i % 3, row=j % 3)
 
 statusLabelVar = tk.StringVar()
 statusLabelVar.set("Idle")
@@ -97,7 +103,8 @@ algoCombobox.current(0)
 inputFileBtn = tk.Button(frame2, text="Open file", command=inputFileBtnAction)
 inputFileBtn.grid(column=0, row=3, sticky='w')
 
-outputFileBtn = tk.Button(frame2, text="Save file", command=outputFileBtnAction)
+outputFileBtn = tk.Button(frame2, text="Save file",
+                          command=outputFileBtnAction)
 outputFileBtn.grid(column=1, row=3, sticky='w')
 
 root.mainloop()

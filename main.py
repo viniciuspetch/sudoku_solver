@@ -6,6 +6,28 @@ import sys
 import copy
 
 
+def matrixToString(solMatrix):
+    solString = ''
+    for i in range(9):
+        for j in range(9):
+            solString += solMatrix[i][j]
+        solString += '\n'
+    return solString
+
+
+def stringToMatrix(solString):
+    solMatrix = []
+    for i in range(9):
+        solMatrix.append([])
+        for j in range(9):
+            solMatrix[i].append(int(solString[j+i*9]))
+    return solMatrix
+
+
+def filterInstance(instString):
+    return "".join("".join(c for c in instString if c.isdigit()).split("\n"))
+
+
 def loadInstance(filename):
     try:
         if filename[-4:] != '.txt':
@@ -23,15 +45,16 @@ def loadInstance(filename):
     return instance
 
 
-def main(initialSolution, print_flag=-1, algorithm='backtracking'):
-    solution = Solution(initialSolution)
+def main(solMatrix, print_flag=-1, algorithm='backtracking'):
+    # Convert matrix to Solution
+    solution = Solution(solMatrix)
+    # Start the timer
     start_time = time.time()
-    
+    # Logging
     if print_flag >= 2:
         print("Main: Instance")
         solution.printTableShort()
-
-    # Heuristics
+    # Run set of heuristics
     runHeuristicGroup(solution)
     # Check if heuristics already found a final solution
     nf_x, nf_y = getFirstNonFinal(solution)

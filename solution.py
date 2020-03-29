@@ -10,7 +10,7 @@ class Solution:
         for i in range(9):
             aux_list = []
             for j in range(9):
-                if (instance[i][j] == '0'):
+                if (instance[i][j] == '0' or instance[i][j] == 0):
                     aux_list.append(Cell(False, -1))
                 else:
                     aux_list.append(Cell(True, int(instance[i][j])))
