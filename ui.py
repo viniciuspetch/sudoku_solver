@@ -3,36 +3,15 @@ import tkinter.ttk as ttk
 from tkinter import filedialog
 import main
 
-def solveBtnAction():
-    statusLabelVar.set("Solving...")
-    root.update()
-    solve()
-
-def inputFileBtnAction():
-    filename = filedialog.askopenfilename(initialdir="./", title="Select file")
-    with open(filename, "r") as inputFile:
-        inputList = inputFile.readlines()
-        for s in inputList:
-            if s == "":
-                inputList.remove(s)
-        for i in range(9):
-            newList = inputList[i].replace(" ", "")
-            for j in range(9):
-                scell[j][i].delete(0, tk.END)
-                if newList[j] != '0':
-                    scell[j][i].insert(0, newList[j])
-        statusLabelVar.set("File opened")
-
-def outputFileBtnAction():
-    filename = filedialog.asksaveasfilename(initialdir="./", title="Select file")
-    with open(filename, "w") as outputFile:
-        output = ''
-        for i in range(9):
-            for j in range(9):
-                output += scell[i][j].get()
-            output += '\n'
-        outputFile.write(output)
-        statusLabelVar.set("File saved")
+def transformInstance(instOrig):
+    #instString = "".join("".join("".join(c for c in instOrig if c.isdigit()).split()).split("\n"))
+    instString = "".join("".join(c for c in instOrig if c.isdigit()).split("\n"))
+    instMatrix = []
+    for i in range(9):
+        instMatrix.append([])
+        for j in range(9):
+            instMatrix[i].append(int(instString[j+i*9]))
+    return instMatrix
 
 def solve():    
     solution = []
@@ -44,7 +23,7 @@ def solve():
             else:
                 scell[i][j]['background'] = 'light grey'
                 solution[i].append(scell[i][j].get())
-    root.update()           
+    root.update()
     result = main.main(solution, algorithm=algoCombobox.get()).toMatrix()
     for i in range(9):
         for j in range(9):
@@ -52,6 +31,33 @@ def solve():
             scell[i][j].insert(0, result[i][j])
     statusLabelVar.set("Solved!")
 
+def solveBtnAction():
+    statusLabelVar.set("Solving...")
+    root.update()
+    solve()
+
+
+def inputFileBtnAction():
+    filename = filedialog.askopenfilename(initialdir="./", title="Select file")
+    with open(filename, "r") as inputFile:
+        instMatrix = transformInstance(inputFile.read())
+        for i in range(9):
+            for j in range(9):
+                scell[j][i].delete(0, tk.END)
+                if instMatrix[i][j] != 0:
+                    scell[j][i].insert(0, instMatrix[i][j])
+        statusLabelVar.set("File opened")
+
+def outputFileBtnAction():
+    filename = filedialog.asksaveasfilename(initialdir="./", title="Select file")
+    with open(filename, "w") as outputFile:
+        output = ''
+        for i in range(9):
+            for j in range(9):
+                output += scell[j][i].get()
+            output += '\n'
+        outputFile.write(output)
+        statusLabelVar.set("File saved")
 
 root = tk.Tk()
 mainframe = tk.Frame(root)
