@@ -22,6 +22,24 @@ def getAllNonFinal(solution):
     return nf_list
 
 
+def runHeuristicGroup(solution):
+    repeat = 0
+    while repeat < 2:
+        if repeat == 0:
+            print("Main: Elimination Process Heuristic")
+            hres = heuristic1(solution)
+        elif repeat == 1:
+            print("Main: Unique Mention Heuristic")
+            hres = heuristicPlus(solution)
+        if hres:
+            solution.printStats()
+            solution.printTableShort()
+            hres = False
+            repeat = 0
+        else:
+            repeat += 1
+    
+
 def heuristic1(solution):
     # First heuristic, deterministic, remove invalid options
     # Returns True if a new cell has a final value, returns False otherwise
@@ -44,6 +62,37 @@ def heuristic1(solution):
                             solution.matrix[k][l].mark[value-1] = False
     # Update final status of all cells
     return solution.checkFinal()
+
+def heuristicPlus(solution):    
+    for i in range(9):
+        count = []        
+        for j in range(9):
+            count.append(0)
+        for j in range(9):
+            for k in range(9):
+                if solution.matrix[i][j].mark[k]:
+                    count[k] += 1
+        for j in range(9):
+            if count[j] == 1:                
+                for k in range(9):
+                    if solution.matrix[i][k].mark[j]:
+                        solution.matrix[i][k].setFinal(j+1)
+        count = []        
+        for j in range(9):
+            count.append(0)
+        for j in range(9):
+            for k in range(9):
+                if solution.matrix[j][i].mark[k]:
+                    count[k] += 1
+        for j in range(9):
+            if count[j] == 1:
+                for k in range(9):
+                    if solution.matrix[k][i].mark[j]:
+                        for l in range(9):
+                            solution.matrix[k][i].mark[l] = False
+                        solution.matrix[k][i].mark[j] = True
+        return solution.checkFinal()
+    
 
 
 def estochasticBacktracking(solution, print_flag=2):
@@ -162,10 +211,8 @@ def backtracking(solution, print_flag=2):
                     new_solution.printStats()
                     new_solution.printTableShort()
 
-                # Apply heuristic
-                repeat = True
-                while(repeat):
-                    repeat = heuristic1(new_solution)
+                # Apply heuristics
+                runHeuristicGroup(solution)
 
                 # Print
                 if print_flag >= 2:

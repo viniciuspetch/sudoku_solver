@@ -24,7 +24,7 @@ def solve():
                 scell[i][j]['background'] = 'light grey'
                 solution[i].append(scell[i][j].get())
     root.update()
-    result = main.main(solution, algorithm=algoCombobox.get()).toMatrix()
+    result = main.main(solution, print_flag=2, algorithm=algoCombobox.get()).toMatrix()
     for i in range(9):
         for j in range(9):
             scell[i][j].delete(0, tk.END)
@@ -91,7 +91,7 @@ solveBtn.grid(column=0, row=1, sticky='w')
 
 algoCombobox = ttk.Combobox(frame2, state='readonly')
 algoCombobox.grid(column=0, row=2, sticky='w')
-algoCombobox['values'] = ('backtracking', 'estochastic')
+algoCombobox['values'] = ('backtracking', 'estochastic', 'none')
 algoCombobox.current(0)
 
 inputFileBtn = tk.Button(frame2, text="Open file", command=inputFileBtnAction)
