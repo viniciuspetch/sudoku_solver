@@ -35,7 +35,7 @@ class Solution:
                     aux_string = aux_string + "|"
 
                 for k in range(9):
-                    if self.matrix[i][j].fixed == True:
+                    if self.matrix[i][j].final == True:
                         sep = '_'
                         if self.matrix[i][j].mark[k] == True:
                             aux_string = aux_string + str(k+1)
