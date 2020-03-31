@@ -3,64 +3,33 @@ from cell import Cell
 
 class Solution:
     def __init__(self, instance):
-        self.errorQt = 0
-        self.matrix = []
-        self.id = -1
-
-        for i in range(9):
-            aux_list = []
-            for j in range(9):
-                if (instance[i][j] == '0' or instance[i][j] == 0):
-                    aux_list.append(Cell(False, -1))
-                else:
-                    aux_list.append(Cell(True, int(instance[i][j])))
-            self.matrix.append(aux_list.copy())
+        self.matrix = [[Cell(instance[i][j]) for i in range(9)]
+                       for j in range(9)]
 
     def toMatrix(self):
-        m = []
-        for i in range(9):
-            m.append([])
-            for j in range(9):
-                m[i].append(self.matrix[i][j].value)
-        return m
+        return [[self.matrix[j][i].value for j in range(9)] for i in range(9)]
 
     def printTable(self):
         for i in range(9):
-            if (i % 3 == 0):
-                print('='*95)
             aux_string = ""
             for j in range(9):
                 aux_string = aux_string + "|"
-                if (j % 3 == 0):
-                    aux_string = aux_string + "|"
-
+                aux_string += str(self.matrix[i][j].value) + " "
                 for k in range(9):
-                    if self.matrix[i][j].final == True:
-                        sep = '_'
-                        if self.matrix[i][j].mark[k] == True:
-                            aux_string = aux_string + str(k+1)
-                        else:
-                            aux_string = aux_string + sep
+                    if self.matrix[i][j].mark[k]:
+                        aux_string = aux_string + str(k+1)
                     else:
-                        sep = ' '
-                        if self.matrix[i][j].mark.count(True) == 1:
-                            sep = '_'
-                        if self.matrix[i][j].mark[k] == True:
-                            aux_string = aux_string + str(k+1)
-                        else:
-                            aux_string = aux_string + sep
-            aux_string = aux_string + "||"
-
+                        aux_string = aux_string + ' '
             print(aux_string)
-        print('='*95)
+        print('-'*95)
 
     def printTableShort(self):
         for i in range(9):
             for j in range(9):
-                if self.matrix[i][j].final:
-                    print(self.matrix[i][j].value, end=" ")
+                if self.matrix[j][i].value:
+                    print(self.matrix[j][i].value, end=" ")
                 else:
-                    print('_', end=" ")
+                    print(' ', end=" ")
             print()
 
     def countErrors(self):
@@ -139,4 +108,3 @@ class Solution:
                 elif self.matrix[i][j].mark.count(True) == 1:
                     return True
         return False
-

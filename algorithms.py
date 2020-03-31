@@ -26,7 +26,7 @@ def runHeuristicGroup(solution):
     repeat = 0
     while repeat < 2:
         if repeat == 0:
-            hres = eliminationProcessHeuristic(solution)
+            hres = constrProp(solution)
         elif repeat == 1:
             hres = uniqueMentionHeuristic(solution)
         if hres:
@@ -34,28 +34,18 @@ def runHeuristicGroup(solution):
         repeat += 1
 
 
-def eliminationProcessHeuristic(solution):
-    # First heuristic, deterministic, remove invalid options
-    # Returns True if a new cell has a final value, returns False otherwise
+def constrProp(grid):
+    # Constraint Propagation
     for i in range(9):
         for j in range(9):
-            # If a value is final, use as pivot to remove invalid options
-            if solution.matrix[i][j].final == True:
-                # Get its value
-                value = solution.matrix[i][j].value
-                # Clean rows and columns
+            if grid.matrix[i][j].value:
                 for k in range(9):
-                    if k != i:
-                        solution.matrix[k][j].mark[value-1] = False
-                    if k != j:
-                        solution.matrix[i][k].mark[value-1] = False
-                # Clean groups
+                    grid.matrix[k][j].mark[grid.matrix[i][j].value-1] = False
+                    grid.matrix[i][k].mark[grid.matrix[i][j].value-1] = False
                 for k in range(int(i / 3)*3, int(i / 3)*3+3):
                     for l in range(int(j / 3)*3, int(j / 3)*3+3):
-                        if k != i and l != j:
-                            solution.matrix[k][l].mark[value-1] = False
-    # Update final status of all cells
-    return solution.checkFinal()
+                        grid.matrix[k][l].mark[grid.matrix[i][j].value-1] = False
+    return grid.checkFinal()
 
 
 def uniqueMentionHeuristic(solution):
@@ -86,82 +76,9 @@ def uniqueMentionHeuristic(solution):
                         solution.matrix[k][i].mark[j] = True
         return solution.checkFinal()
 
-
-def estochasticBacktracking(solution, print_flag=2):
-    if print_flag >= 2:
-        print("Estochastic backtracking: Start")
-    solution_stack = [solution]
-
-    while(len(solution_stack) > 0):
-        curr_solution = solution_stack.pop()
-        # Check inconsistencies
-        if curr_solution.checkInc():
-            print("[ERROR] Estochastic backtracking: Inconsistency found")
-
-        # Get the first non-final cell
-        # Stop
-        nf_list = getAllNonFinal(curr_solution)
-
-        if len(nf_list) != 0:
-            random_cell = randrange(len(nf_list))
-            nf_x, nf_y = nf_list[random_cell]
-        else:
-            if print_flag >= 2:
-                print("Estochastic backtracking: Found a complete solution")
-                curr_solution.printStats()
-                curr_solution.printTableShort()
-            return curr_solution
-
-        # Print
-        if print_flag >= 2:
-            print("Estochastic backtracking: Solution from stack")
-            curr_solution.printStats()
-            curr_solution.printTableShort()
-
-        for i in range(9):
-            if curr_solution.matrix[nf_x][nf_y].mark[i]:
-                # Create copy to modify
-                new_solution = copy.deepcopy(curr_solution)
-
-                # Set the first non-final cell as final for each option value
-                new_solution.matrix[nf_x][nf_y].setFinal(i+1)
-
-                # Print
-                if print_flag >= 2:
-                    print("Estochastic backtracking: Set cell value at (%d,%d) to %d" %
-                          (nf_x, nf_y, i+1))
-                    new_solution.printStats()
-                    new_solution.printTableShort()
-
-                # Apply heuristic
-                repeat = True
-                while(repeat):
-                    repeat = eliminationProcessHeuristic(new_solution)
-
-                # Print
-                if print_flag >= 2:
-                    print("Estochastic backtracking: Heuristic applied")
-                    new_solution.printStats()
-                    new_solution.printTableShort()
-
-                # Eliminate dead ends
-                possible = True
-                if new_solution.countErrors() > 0:
-                    if print_flag >= 2:
-                        print(
-                            "Estochastic backtracking: Dead end - solution has errors")
-                    possible = False
-                if new_solution.countGaps() > 0:
-                    if print_flag >= 2:
-                        print(
-                            "Estochastic backtracking: Dead end - solution has gaps")
-                    possible = False
-
-                if possible:
-                    solution_stack.append(copy.copy(new_solution))
-
-
 # Iterative backtracking
+
+
 def backtracking(solution, print_flag=2):
     solution_stack = [solution]
     while(len(solution_stack) > 0):

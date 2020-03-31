@@ -4,7 +4,7 @@ from tkinter import filedialog
 import main
 
 
-def gridToMatrix():
+def UIToMatrix():
     solMatrix = []
     for i in range(9):
         solMatrix.append([])
@@ -16,12 +16,12 @@ def gridToMatrix():
     return solMatrix
 
 
-def matrixToGrid(solMatrix):
+def matrixToUI(solMatrix):
     for i in range(9):
         for j in range(9):
-            scell[j][i].delete(0, tk.END)
+            scell[i][j].delete(0, tk.END)
             if int(solMatrix[i][j]) != 0:
-                scell[j][i].insert(0, solMatrix[i][j])
+                scell[i][j].insert(0, solMatrix[i][j])
 
 
 def solve():
@@ -30,8 +30,7 @@ def solve():
             if scell[i][j].get() != '':
                 scell[i][j]['background'] = 'light grey'
     root.update()
-    result = main.main(gridToMatrix(), print_flag=2,
-                       algorithm=algoCombobox.get()).toMatrix()
+    result = main.mainTest(UIToMatrix()).toMatrix()
     for i in range(9):
         for j in range(9):
             scell[i][j].delete(0, tk.END)
@@ -48,7 +47,7 @@ def solveBtnAction():
 def inputFileBtnAction():
     filename = filedialog.askopenfilename(initialdir="./", title="Select file")
     with open(filename, "r") as inputFile:
-        matrixToGrid(main.stringToMatrix(main.filterInstance(inputFile.read())))
+        matrixToUI(main.stringToMatrix(main.filterInstance(inputFile.read())))
         statusLabelVar.set("File opened")
 
 

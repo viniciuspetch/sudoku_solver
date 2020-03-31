@@ -54,6 +54,13 @@ def main(matrix, print_flag=-1, algorithm='backtracking'):
     print(time.time()-start_time)
     return bestGrid
 
+def mainTest(matrix):
+    grid = Solution(matrix)
+    grid.printTable()
+    constrProp(grid)
+    grid.printTable()
+    return grid
+
 
 if __name__ == "__main__":
     instance_filename = ''
