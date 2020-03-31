@@ -34,7 +34,6 @@ def constrProp(grid):
                     for l in range(int(j / 3)*3, int(j / 3)*3+3):
                         grid.matrix[k][l].mark[grid.matrix[i]
                                                [j].value-1] = False
-    return grid.checkFinal()
 
 
 def uniqueMention(solution):
@@ -81,29 +80,29 @@ def uniqueMention(solution):
                                 solution.matrix[l][m].mark = [
                                     False for o in range(9)]
                                 solution.matrix[l][m].mark[k] = True
-    return solution.checkFinal()
 
 
 def backtracking(grid):
     # Iterative backtracking
+    repeat = True
+    while repeat:
+        constrProp(grid)
+        r1 = grid.checkFinal()
+        uniqueMention(grid)
+        r2 = grid.checkFinal()
+        repeat = r1 or r2
     gridStack = [grid]
     while(len(gridStack) > 0):
-        print("New grid")
         currGrid = gridStack.pop()
-        currGrid.printTable()
         repeat = True
         while repeat:
-            r1 = constrProp(currGrid)
-            print("Constraint Propagation")
-            currGrid.printTable()
-            r2 = uniqueMention(currGrid)
-            print("Unique Mention")
-            currGrid.printTable()
+            constrProp(currGrid)
+            r1 = currGrid.checkSingleFinal()
+            uniqueMention(currGrid)
+            r2 = currGrid.checkSingleFinal()
             repeat = r1 or r2
-        currGrid.printTable()
         if not currGrid.countGaps():
             nf_x, nf_y = getFirstNonFinal(currGrid)
-            print(nf_x, nf_y)
             if nf_x == -1 and nf_y == -1:
                 return currGrid
             for i in range(9):

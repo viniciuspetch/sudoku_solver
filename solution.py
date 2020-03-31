@@ -36,6 +36,14 @@ class Solution:
             print()
 
     def checkFinal(self):
+        result = False
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].checkFinal():
+                    result = True
+        return result
+
+    def checkSingleFinal(self):
         for i in range(9):
             for j in range(9):
                 if self.matrix[i][j].checkFinal():
