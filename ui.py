@@ -26,10 +26,6 @@ def matrixToUI(solMatrix):
 
 
 def solve():
-    for i in range(9):
-        for j in range(9):
-            if scell[i][j].get() != '':
-                scell[i][j]['background'] = 'light grey'
     root.update()
     result = mainStart(UIToMatrix()).toMatrix()
     matrixToUI(result)
@@ -46,7 +42,13 @@ def inputFileBtnAction():
     filename = filedialog.askopenfilename(initialdir="./", title="Select file")
     with open(filename, "r") as inputFile:
         matrixToUI(main.stringToMatrix(main.filterInstance(inputFile.read())))
-        statusLabelVar.set("File opened")
+        statusLabelVar.set("File opened")        
+        for i in range(9):
+            for j in range(9):
+                if scell[i][j].get() != '':
+                    scell[i][j]['background'] = 'light grey'
+                else:
+                    scell[i][j]['background'] = 'white'
 
 
 def outputFileBtnAction():

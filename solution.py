@@ -36,12 +36,11 @@ class Solution:
             print()
 
     def checkFinal(self):
-        new_final = False
         for i in range(9):
             for j in range(9):
                 if self.matrix[i][j].checkFinal():
-                    new_final = True
-        return new_final
+                    return True
+        return False
 
     def countErrors(self):
         error_qt_x = 0
@@ -83,12 +82,12 @@ class Solution:
         return error_qt_total
 
     def countGaps(self):
-        gap_qt = 0
+        count = 0
         for i in range(9):
             for j in range(9):
-                if self.matrix[i][j].mark.count(True) == 0:
-                    gap_qt += 1
-        return gap_qt
+                if not self.matrix[i][j].value and not self.matrix[i][j].mark.count(True):
+                    count += 1
+        return count
 
     def countNonFinal(self):
         gap_qt = 0

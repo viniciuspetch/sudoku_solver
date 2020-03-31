@@ -19,7 +19,6 @@ class Cell:
         if self.value:
             return False
         if self.mark.count(True) == 1:
-            self.final = True
             self.value = self.mark.index(True)+1
             self.mark = [False for j in range(9)]
             return True

@@ -8,7 +8,7 @@ from random import randrange
 def getFirstNonFinal(solution):
     for i in range(9):
         for j in range(9):
-            if solution.matrix[i][j].final != True:
+            if not solution.matrix[i][j].value:
                 return (i, j)
     return (-1, -1)
 
@@ -38,6 +38,7 @@ def constrProp(grid):
 
 
 def uniqueMention(solution):
+    # Unique Mention
     for i in range(9):
         count1 = [0 for x in range(9)]
         count2 = [0 for x in range(9)]
@@ -83,22 +84,31 @@ def uniqueMention(solution):
     return solution.checkFinal()
 
 
-def backtracking(solution, print_flag=2):
+def backtracking(grid):
     # Iterative backtracking
-    solution_stack = [solution]
-    while(len(solution_stack) > 0):
-        curr_solution = solution_stack.pop()
-        runHeuristicGroup(curr_solution)
-        nf_x, nf_y = getFirstNonFinal(curr_solution)
-        if nf_x == -1 and nf_y == -1:
-            return curr_solution
-        for i in range(9):
-            if curr_solution.matrix[nf_x][nf_y].mark[i]:
-                new_solution = copy.deepcopy(curr_solution)
-                new_solution.matrix[nf_x][nf_y].setFinal(i+1)
-                runHeuristicGroup(solution)
-                possible = True
-                if new_solution.countGaps() > 0:
-                    possible = False
-                if possible:
-                    solution_stack.append(copy.copy(new_solution))
+    gridStack = [grid]
+    while(len(gridStack) > 0):
+        print("New grid")
+        currGrid = gridStack.pop()
+        currGrid.printTable()
+        repeat = True
+        while repeat:
+            r1 = constrProp(currGrid)
+            print("Constraint Propagation")
+            currGrid.printTable()
+            r2 = uniqueMention(currGrid)
+            print("Unique Mention")
+            currGrid.printTable()
+            repeat = r1 or r2
+        currGrid.printTable()
+        if not currGrid.countGaps():
+            nf_x, nf_y = getFirstNonFinal(currGrid)
+            print(nf_x, nf_y)
+            if nf_x == -1 and nf_y == -1:
+                return currGrid
+            for i in range(9):
+                if currGrid.matrix[nf_x][nf_y].mark[i]:
+                    newGrid = copy.deepcopy(currGrid)
+                    newGrid.matrix[nf_x][nf_y].value = i+1
+                    newGrid.matrix[nf_x][nf_y].mark = [False for j in range(9)]
+                    gridStack.append(copy.deepcopy(newGrid))
