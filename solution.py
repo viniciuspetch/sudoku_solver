@@ -13,15 +13,18 @@ class Solution:
         for i in range(9):
             aux_string = ""
             for j in range(9):
-                aux_string = aux_string + "|"
-                aux_string += str(self.matrix[i][j].value) + " "
-                for k in range(9):
-                    if self.matrix[i][j].mark[k]:
-                        aux_string = aux_string + str(k+1)
-                    else:
-                        aux_string = aux_string + ' '
+                if self.matrix[j][i].value:
+                    aux_string += "|" + str(self.matrix[j][i].value) + "          "
+                else:
+                    aux_string += "|  "
+                    for k in range(9):
+                        if self.matrix[j][i].mark[k]:
+                            aux_string += str(k+1)
+                        else:
+                            aux_string += ' '
+            aux_string += "|"
             print(aux_string)
-        print('-'*95)
+        print()
 
     def printTableShort(self):
         for i in range(9):
@@ -31,6 +34,14 @@ class Solution:
                 else:
                     print(' ', end=" ")
             print()
+
+    def checkFinal(self):
+        new_final = False
+        for i in range(9):
+            for j in range(9):
+                if self.matrix[i][j].checkFinal():
+                    new_final = True
+        return new_final
 
     def countErrors(self):
         error_qt_x = 0
@@ -70,14 +81,6 @@ class Solution:
         # print('(%d, %d, %d) = %d' %
         #   (error_qt_x, error_qt_y, error_qt_group, error_qt_total))
         return error_qt_total
-
-    def checkFinal(self):
-        new_final = False
-        for i in range(9):
-            for j in range(9):
-                if self.matrix[i][j].checkFinal():
-                    new_final = True
-        return new_final
 
     def countGaps(self):
         gap_qt = 0

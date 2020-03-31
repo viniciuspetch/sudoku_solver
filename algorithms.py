@@ -22,18 +22,6 @@ def getAllNonFinal(solution):
     return nf_list
 
 
-def runHeuristicGroup(solution):
-    repeat = 0
-    while repeat < 2:
-        if repeat == 0:
-            hres = constrProp(solution)
-        elif repeat == 1:
-            hres = uniqueMentionHeuristic(solution)
-        if hres:
-            repeat = -1
-        repeat += 1
-
-
 def constrProp(grid):
     # Constraint Propagation
     for i in range(9):
@@ -44,42 +32,59 @@ def constrProp(grid):
                     grid.matrix[i][k].mark[grid.matrix[i][j].value-1] = False
                 for k in range(int(i / 3)*3, int(i / 3)*3+3):
                     for l in range(int(j / 3)*3, int(j / 3)*3+3):
-                        grid.matrix[k][l].mark[grid.matrix[i][j].value-1] = False
+                        grid.matrix[k][l].mark[grid.matrix[i]
+                                               [j].value-1] = False
     return grid.checkFinal()
 
 
-def uniqueMentionHeuristic(solution):
+def uniqueMention(solution):
     for i in range(9):
-        count = [0 for i in range(9)]
+        count1 = [0 for x in range(9)]
+        count2 = [0 for x in range(9)]
         for j in range(9):
             for k in range(9):
                 if solution.matrix[i][j].mark[k]:
-                    count[k] += 1
-        for j in range(9):
-            if count[j] == 1:
-                for k in range(9):
-                    if solution.matrix[i][k].mark[j] and solution.matrix[i][k].final == False:
-                        for l in range(9):
-                            solution.matrix[i][k].mark[l] = False
-                        solution.matrix[i][k].mark[j] = True
-        count = [0 for i in range(9)]
-        for j in range(9):
-            for k in range(9):
+                    count1[k] += 1
                 if solution.matrix[j][i].mark[k]:
-                    count[k] += 1
+                    count2[k] += 1
+            if solution.matrix[i][j].value:
+                count1[solution.matrix[i][j].value-1] += 1
+            if solution.matrix[j][i].value:
+                count2[solution.matrix[j][i].value-1] += 1
         for j in range(9):
-            if count[j] == 1:
+            if count1[j] == 1:
                 for k in range(9):
-                    if solution.matrix[k][i].mark[j] and solution.matrix[k][i].final == False:
-                        for l in range(9):
-                            solution.matrix[k][i].mark[l] = False
+                    if solution.matrix[i][k].mark[j]:
+                        solution.matrix[i][k].mark = [False for l in range(9)]
+                        solution.matrix[i][k].mark[j] = True
+            if count2[j] == 1:
+                for k in range(9):
+                    if solution.matrix[k][i].mark[j]:
+                        solution.matrix[k][i].mark = [False for l in range(9)]
                         solution.matrix[k][i].mark[j] = True
-        return solution.checkFinal()
-
-# Iterative backtracking
+    for i in range(0, 9, 3):
+        for j in range(0, 9, 3):
+            count = [0 for x in range(9)]
+            for k in range(i, i+3):
+                for l in range(j, j+3):
+                    for m in range(9):
+                        if solution.matrix[k][l].mark[m]:
+                            count[m] += 1
+                    if solution.matrix[k][l].value:
+                        count[solution.matrix[k][l].value-1] += 1
+            for k in range(9):
+                if count[k] == 1:
+                    for l in range(i, i+3):
+                        for m in range(j, j+3):
+                            if solution.matrix[l][m].mark[k]:
+                                solution.matrix[l][m].mark = [
+                                    False for o in range(9)]
+                                solution.matrix[l][m].mark[k] = True
+    return solution.checkFinal()
 
 
 def backtracking(solution, print_flag=2):
+    # Iterative backtracking
     solution_stack = [solution]
     while(len(solution_stack) > 0):
         curr_solution = solution_stack.pop()

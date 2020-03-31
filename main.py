@@ -44,9 +44,9 @@ def loadInstance(filename):
     return instance
 
 
-def main(matrix, print_flag=-1, algorithm='backtracking'):
+def main2(matrix, print_flag=-1, algorithm='backtracking'):
     grid = Solution(matrix)
-    start_time = time.time()    
+    start_time = time.time()
     if algorithm == 'backtracking':
         bestGrid = backtracking(grid, print_flag)
     elif algorithm == 'estochastic':
@@ -54,11 +54,20 @@ def main(matrix, print_flag=-1, algorithm='backtracking'):
     print(time.time()-start_time)
     return bestGrid
 
-def mainTest(matrix):
+
+def main(matrix):
     grid = Solution(matrix)
     grid.printTable()
-    constrProp(grid)
-    grid.printTable()
+    repeat = True
+    while repeat:
+        repeat = False
+        r1 = constrProp(grid)
+        print('1')
+        grid.printTable()
+        r2 = uniqueMention(grid)
+        print('2')
+        grid.printTable()
+        repeat = r1 or r2
     return grid
 
 

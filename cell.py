@@ -17,12 +17,11 @@ class Cell:
 
     def checkFinal(self):
         if self.value:
-            return False        
+            return False
         if self.mark.count(True) == 1:
             self.final = True
-            for i in range(9):
-                if self.mark[i] == True:
-                    self.value = i+1
+            self.value = self.mark.index(True)+1
+            self.mark = [False for j in range(9)]
             return True
         else:
             return False

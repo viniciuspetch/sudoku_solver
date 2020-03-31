@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog
 import main
+from main import main as mainStart
 
 
 def UIToMatrix():
@@ -9,19 +10,19 @@ def UIToMatrix():
     for i in range(9):
         solMatrix.append([])
         for j in range(9):
-            if scell[i][j].get() == '':
+            if scell[j][i].get() == '':
                 solMatrix[i].append(0)
             else:
-                solMatrix[i].append(int(scell[i][j].get()))
+                solMatrix[i].append(int(scell[j][i].get()))
     return solMatrix
 
 
 def matrixToUI(solMatrix):
     for i in range(9):
         for j in range(9):
-            scell[i][j].delete(0, tk.END)
+            scell[j][i].delete(0, tk.END)
             if int(solMatrix[i][j]) != 0:
-                scell[i][j].insert(0, solMatrix[i][j])
+                scell[j][i].insert(0, solMatrix[i][j])
 
 
 def solve():
@@ -30,11 +31,8 @@ def solve():
             if scell[i][j].get() != '':
                 scell[i][j]['background'] = 'light grey'
     root.update()
-    result = main.mainTest(UIToMatrix()).toMatrix()
-    for i in range(9):
-        for j in range(9):
-            scell[i][j].delete(0, tk.END)
-            scell[i][j].insert(0, result[i][j])
+    result = mainStart(UIToMatrix()).toMatrix()
+    matrixToUI(result)
     statusLabelVar.set("Solved!")
 
 
